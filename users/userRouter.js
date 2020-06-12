@@ -34,24 +34,55 @@ router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  console.log("Success to the user route");
-  res.status(200).json({ message: "Hello!" });
+  Users.get()
+    .then((allUsers) => {
+      res.status(200).json(allUsers);
+    })
+    .catch(() => res.status(500).json({ message: "An error occurred." }));
 });
 
 router.get("/:id", validateUserId, (req, res) => {
   res.status(200).json(req.user);
 });
 
-router.get("/:id/posts", (req, res) => {
-  // do your magic!
+router.get("/:id/posts", validateUserId, (req, res) => {
+  Users.getUserPosts(req.user.id)
+    .then((posts) => {
+      console.log(posts);
+      res.status(200).json(posts);
+    })
+    .catch(() =>
+      res.status(500).json({ error: "An internal server error occured." })
+    );
 });
 
-router.delete("/:id", (req, res) => {
-  // do your magic!
+router.delete("/:id", validateUserId, (req, res) => {
+  Users.remove(req.user.id)
+    .then((num) => res.status(201).json({ message: `${num} user deleted` }))
+    .catch(() =>
+      res.status(500).json({ errror: "There was an error deleting the user." })
+    );
 });
 
-router.put("/:id", (req, res) => {
-  // do your magic!
+router.put("/:id", validateUserId, validateUser, (req, res) => {
+  const userObj = {
+    name: req.body.name,
+  };
+  Users.update(req.params.id, userObj)
+    .then((count) => {
+      if (count === 1) {
+        Users.getById(req.params.id)
+          .then((user) => res.status(201).json(user))
+          .catch(() =>
+            res.status(400).json({ message: "Error fetching updated user" })
+          );
+      } else {
+        res.status(400).json({ message: "Did not find user to update" });
+      }
+    })
+    .catch(() =>
+      res.status(500).json({ message: "Unable to modify the user" })
+    );
 });
 
 //custom middleware
