@@ -1,6 +1,7 @@
 const express = require("express");
 
 const userRoutes = require("./users/userRouter");
+const postRoutes = require("./posts/postRouter");
 
 const server = express();
 
@@ -17,6 +18,7 @@ function logger(req, res, next) {
 
 server.use(logger);
 server.use('/api/users', userRoutes);
+server.use('/api/posts', postRoutes);
 
 server.listen(8000, () => console.log("Blog API running on port 8000."));
 
