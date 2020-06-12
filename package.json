@@ -2,9 +2,9 @@
   "name": "node-api3-project",
   "version": "1.0.0",
   "description": "Node API 3 Project",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/LambdaSchool/node-api3-project#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "knex": "^0.20.11",
     "sqlite3": "^4.1.1"
